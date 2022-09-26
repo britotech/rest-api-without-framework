@@ -1,4 +1,6 @@
-package tech.brito.domain;
+package tech.brito.domain.repositories;
+
+import tech.brito.domain.models.User;
 
 public interface UserRepository {
 

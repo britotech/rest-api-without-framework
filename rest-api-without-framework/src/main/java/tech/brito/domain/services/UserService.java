@@ -1,6 +1,7 @@
-package tech.brito.domain;
+package tech.brito.domain.services;
 
-import tech.brito.app.api.user.PasswordEncoder;
+import tech.brito.domain.models.User;
+import tech.brito.domain.repositories.UserRepository;
 
 import java.util.Objects;
 import java.util.Optional;

@@ -2,7 +2,7 @@ package tech.brito.app;
 
 import com.sun.net.httpserver.BasicAuthenticator;
 import tech.brito.app.api.user.PasswordEncoder;
-import tech.brito.domain.UserService;
+import tech.brito.domain.services.UserService;
 
 public class ApiAuthenticator extends BasicAuthenticator {
 

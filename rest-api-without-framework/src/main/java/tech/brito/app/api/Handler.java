@@ -7,11 +7,12 @@ import io.vavr.control.Try;
 import tech.brito.app.exceptions.ApplicationExceptions;
 import tech.brito.app.exceptions.GlobalExceptionHandler;
 
+import java.io.IOException;
 import java.io.InputStream;
 
 public abstract class Handler {
-    private final ObjectMapper objectMapper;
-    private final GlobalExceptionHandler exceptionHandler;
+    protected final ObjectMapper objectMapper;
+    protected final GlobalExceptionHandler exceptionHandler;
 
     public Handler(ObjectMapper objectMapper, GlobalExceptionHandler exceptionHandler) {
         this.objectMapper = objectMapper;
@@ -36,5 +37,27 @@ public abstract class Handler {
         var headers = new Headers();
         headers.set(key, value);
         return headers;
+    }
+
+    protected void configureResponseOk(HttpExchange exchange) throws IOException {
+        var responseEntity = new ResponseEntity<>("Ok", getHeaders(Constants.CONTENT_TYPE, Constants.APPLICATION_JSON), StatusCode.OK);
+        configureResponse(exchange, responseEntity);
+    }
+
+    protected void configureResponse(HttpExchange exchange, ResponseEntity responseEntity) throws IOException {
+        exchange.getResponseHeaders().putAll(responseEntity.getHeaders());
+        exchange.sendResponseHeaders(responseEntity.getStatusCode().getCode(), 0);
+        byte[] response = writeResponse(responseEntity.getBody());
+        var outputStream = exchange.getResponseBody();
+        outputStream.write(response);
+        outputStream.close();
+    }
+
+    protected ResponseEntity<String> getReponseEntityBadRequest(String errorMessage) {
+        return new ResponseEntity<>(errorMessage, getHeaders(Constants.CONTENT_TYPE, Constants.APPLICATION_TEXT), StatusCode.BAD_REQUEST);
+    }
+
+    protected String formatErrorMessage(HttpExchange exchange) {
+        return String.format("Method %s is not allowed for %s", exchange.getRequestMethod(), exchange.getRequestURI());
     }
 }

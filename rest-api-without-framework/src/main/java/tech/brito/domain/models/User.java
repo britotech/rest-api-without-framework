@@ -1,4 +1,4 @@
-package tech.brito.domain;
+package tech.brito.domain.models;
 
 import java.io.Serializable;
 import java.util.Objects;

@@ -8,13 +8,14 @@ import tech.brito.app.api.ResponseEntity;
 import tech.brito.app.api.StatusCode;
 import tech.brito.app.exceptions.ApplicationExceptions;
 import tech.brito.app.exceptions.GlobalExceptionHandler;
-import tech.brito.domain.User;
-import tech.brito.domain.UserService;
+import tech.brito.domain.models.User;
+import tech.brito.domain.services.UserService;
 
 import java.io.IOException;
 import java.io.InputStream;
 
 import static java.util.Objects.isNull;
+import static tech.brito.app.api.ApiUtils.requestMethodIsPost;
 
 public class UserRegistrationHandler extends Handler {
 
@@ -27,22 +28,12 @@ public class UserRegistrationHandler extends Handler {
 
     @Override
     protected void execute(HttpExchange exchange) throws IOException {
-        if (!"POST".equals(exchange.getRequestMethod())) {
+        if(!requestMethodIsPost().test(exchange)){
             throw ApplicationExceptions.methodNotAllowed(formatErrorMessage(exchange)).get();
         }
 
         ResponseEntity responseEntity = doPost(exchange.getRequestBody());
-        exchange.getResponseHeaders().putAll(responseEntity.getHeaders());
-        exchange.sendResponseHeaders(responseEntity.getStatusCode().getCode(), 0);
-        byte[] response = super.writeResponse(responseEntity.getBody());
-
-        var outputStream = exchange.getResponseBody();
-        outputStream.write(response);
-        outputStream.close();
-    }
-
-    private String formatErrorMessage(HttpExchange exchange) {
-        return String.format("Method %s is not allowed for %s", exchange.getRequestMethod(), exchange.getRequestURI());
+        configureResponse(exchange, responseEntity);
     }
 
     private ResponseEntity doPost(InputStream inputStream) {
@@ -63,9 +54,5 @@ public class UserRegistrationHandler extends Handler {
         var user = userService.create(new User(userRequest.getUsername(), PasswordEncoder.encode(userRequest.getPassword())));
         var userResponse = new UserRegistrationResponse(user.getId(), user.getUsername());
         return new ResponseEntity<>(userResponse, getHeaders(Constants.CONTENT_TYPE, Constants.APPLICATION_JSON), StatusCode.CREATED);
-    }
-
-    private ResponseEntity<String> getReponseEntityBadRequest(String errorMessage) {
-        return new ResponseEntity<>(errorMessage, getHeaders(Constants.CONTENT_TYPE, Constants.APPLICATION_TEXT), StatusCode.BAD_REQUEST);
     }
 }

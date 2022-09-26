@@ -6,7 +6,11 @@ import java.util.function.Supplier;
 public class ApplicationExceptions {
 
     public static Function<? super Throwable, RuntimeException> invalidRequest() {
-        return thr -> new InvalidRequestException(thr.getMessage());
+        return thr -> invalidRequest(thr.getMessage()).get();
+    }
+
+    public static Supplier<RuntimeException> invalidRequest(String message) {
+        return () -> new InvalidRequestException(message);
     }
 
     public static Supplier<RuntimeException> methodNotAllowed(String message) {

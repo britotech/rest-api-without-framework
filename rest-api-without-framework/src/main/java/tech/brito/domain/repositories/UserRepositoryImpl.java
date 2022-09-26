@@ -1,13 +1,12 @@
-package tech.brito.data;
+package tech.brito.domain.repositories;
 
-import tech.brito.domain.User;
-import tech.brito.domain.UserRepository;
+import tech.brito.domain.models.User;
 
 import java.util.Map;
 import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
 
-public class InMemoryUserRepository implements UserRepository {
+public class UserRepositoryImpl implements UserRepository {
 
     private static final Map<String, User> USERS_STORE = new ConcurrentHashMap();
 

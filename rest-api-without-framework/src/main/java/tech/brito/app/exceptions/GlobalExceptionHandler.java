@@ -40,7 +40,7 @@ public class GlobalExceptionHandler {
         }
 
         if (throwable instanceof ResourceNotFoundException ex) {
-            return updateExchangeAndGenerateErrorResponse(exchange, StatusCode.BAD_REQUEST, ex.getMessage());
+            return updateExchangeAndGenerateErrorResponse(exchange, StatusCode.NOT_FOUND, ex.getMessage());
         }
 
         if (throwable instanceof MethodNotAllowedException ex) {
