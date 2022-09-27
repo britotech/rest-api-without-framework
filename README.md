@@ -50,7 +50,7 @@ Quando você executa o programa principal, ele inicia o servidor web na porta `8
 ```bash
 curl localhost:8080/api/status
 ```
-Nosso endpoint ao ser acionado por um método GET ele nos retorna a mensagem espera, e qualquer outro tipo de método é retornado um erro 405 como no próximo exemplo:
+Nosso endpoint ao ser acionado por um método GET ele nos retorna a mensagem esperada, e qualquer outro tipo de método é retornado um erro 405 como no próximo exemplo:
 ```bash
 curl -v -X POST localhost:8080/api/status
 ```
@@ -126,7 +126,7 @@ public class UserRegistrationRequest {
 
 Os usuários serão criados em um serviço que usarei no meu manipulador de API. O método de serviço é simplesmente armazenar o usuário.
 
-A implementação na memória do repositório é a seguinte:
+A implementação do repositório em memória é a seguinte:
 ```java
 
 import java.util.Map;
@@ -186,8 +186,6 @@ Finalmente vamos ao nosso handler. A classe com toda implementação estará dis
 
 Ele converte a solicitação JSON em `UserRegistrationRequest` que definimos acima.
 
-eu preciso converter `UserRegistrationResponse` objeto para JSON string.
-
 O JSON de empacotamento e desempacotamento é feito com o mapeador de objetos Jackson (`com.fasterxml.jackson.databind.ObjectMapper`).
 
 E é assim que instanciamos o novo manipulador no método main do aplicativo:
@@ -197,7 +195,7 @@ E é assim que instanciamos o novo manipulador no método main do aplicativo:
 
 ```
 
-You can run the application and try one of the example requests below: 
+Você pode executar o aplicativo e tentar uma das solicitações de exemplo abaixo:
 
 ```bash
 curl -X POST localhost:8080/api/users/register -d '{"username": "test" , "password" : "test"'
@@ -235,6 +233,8 @@ Criei mais alguns endpoints para brincar um pouco, alguns onde precisei fazer a 
 /api/accounts -> PUT Para criar uma nová conta bancária
 
 /api/accounts/{id da conta}/withdraw PUT Para realizar um saque em uma conta bancária.
+
+Realizei algumas refatorações como por exemplo a validação do usuário pelos usuários cadastrados.
 
 
 
